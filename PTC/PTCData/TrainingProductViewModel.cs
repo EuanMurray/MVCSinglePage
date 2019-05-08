@@ -26,6 +26,7 @@ namespace PTCData
         public bool IsValid { get; set; }
         public string Mode { get; set; }
         public List<KeyValuePair<string, string>> ValidationErrors { get; set; }
+        public string EventArgument { get; set; }
 
         private void ResetSearch()
         {
@@ -35,6 +36,7 @@ namespace PTCData
         private void Init()
         {
             EventCommand = "List";
+            EventArgument = "";
 
             ValidationErrors = new List<KeyValuePair<string, string>>();
 
@@ -61,6 +63,16 @@ namespace PTCData
                     {
                         Get();
                     }
+                    break;
+
+                case "edit":
+                    IsValid = true;
+                    Edit();
+                    break;
+
+                case "delete":
+                    ResetSearch();
+                    Delete();
                     break;
 
                 case "cancel":
@@ -92,6 +104,10 @@ namespace PTCData
             {
                 mgr.Insert(Entity);
             }
+            else
+            {
+                mgr.Update(Entity);
+            }
 
             ValidationErrors = mgr.ValidationErrors;
 
@@ -105,6 +121,10 @@ namespace PTCData
                 if (Mode == "Add")
                 {
                     AddMode();
+                }
+                else
+                {
+                    EditMode();
                 }
             }
         }
@@ -132,6 +152,19 @@ namespace PTCData
             AddMode();
         }
 
+        private void Delete()
+        {
+            TrainingProductManager mgr = new TrainingProductManager();
+            Entity = new TrainingProduct();
+
+            Entity.ProductId = Convert.ToInt32(EventArgument);
+
+            mgr.Delete(Entity);
+            Get();
+
+            ListMode();
+        }
+
         private void AddMode()
         {
             IsListAreaVisible = false;
@@ -139,6 +172,24 @@ namespace PTCData
             IsDetailAreaVisible = true;
 
             Mode = "Add";
+        }
+
+        private void Edit()
+        {
+            TrainingProductManager mgr = new TrainingProductManager();
+
+            Entity = mgr.Get(Convert.ToInt32(EventArgument));
+
+            EditMode();
+        }
+
+        private void EditMode()
+        {
+            IsListAreaVisible = false;
+            IsSearchAreaVisible = false;
+            IsDetailAreaVisible = true;
+
+            Mode = "Edit";
         }
     }
 }

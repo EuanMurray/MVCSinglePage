@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace PTCData
 {
@@ -24,6 +25,37 @@ namespace PTCData
             }
 
             return (ValidationErrors.Count == 0);
+        }
+
+        public bool Delete(TrainingProduct entity)
+        {
+            return true;
+        }
+
+        public TrainingProduct Get(int productId)
+        {
+            List<TrainingProduct> list = new List<TrainingProduct>();
+            TrainingProduct ret = new TrainingProduct();
+
+            list = CreateMockData();
+
+            ret = list.Find(p => p.ProductId == productId);
+
+            return ret;
+        }
+
+        public bool Update (TrainingProduct entity)
+        {
+            bool ret = false;
+
+            ret = Validate(entity);
+
+            if (ret)
+            {
+
+            }
+
+            return ret;
         }
 
         public bool Insert(TrainingProduct entity)
